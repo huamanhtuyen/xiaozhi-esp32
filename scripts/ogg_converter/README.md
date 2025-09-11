@@ -1,29 +1,28 @@
-# ogg_covertor 小智AI OGG 批量转换器
+# ogg_converter Công Cụ Chuyển Đổi OGG Hàng Loạt Cho Xiao Zhi AI
 
-本脚本为OGG批量转换工具，支持将输入的音频文件转换为小智可使用的OGG格式
-基于Python第三方库`ffmpeg-python`实现
-支持OGG和音频之间的互转，响度调节等功能
+Script này là công cụ chuyển đổi OGG hàng loạt, hỗ trợ chuyển đổi file âm thanh đầu vào thành định dạng OGG mà Xiao Zhi có thể sử dụng
+Dựa trên thư viện Python bên thứ ba `ffmpeg-python` để triển khai
+Hỗ trợ chuyển đổi hai chiều giữa OGG và âm thanh, điều chỉnh âm lượng v.v.
 
-# 创建并激活虚拟环境
+# Tạo Và Kích Hoạt Môi Trường Ảo
 
 ```bash
-# 创建虚拟环境
+# Tạo môi trường ảo
 python -m venv venv
-# 激活虚拟环境
+# Kích hoạt môi trường ảo
 source venv/bin/activate # Mac/Linux
 venv\Scripts\activate # Windows
 ```
 
-# 安装依赖
+# Cài Đặt Dependencies
 
-请在虚拟环境中执行
+Vui lòng thực hiện trong môi trường ảo
 
 ```bash
 pip install ffmpeg-python
 ```
 
-# 运行脚本
-```bash
-python ogg_covertor.py
-```
+# Chạy Script
 
+```bash
+python ogg_converter.py

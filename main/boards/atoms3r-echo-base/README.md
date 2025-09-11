@@ -1,43 +1,42 @@
-# 编译配置命令
+# Lệnh Cấu Hình Biên Dịch
 
-**配置编译目标为 ESP32S3：**
+**Cấu hình mục tiêu biên dịch là ESP32S3:**
 
 ```bash
 idf.py set-target esp32s3
 ```
 
-**打开 menuconfig：**
+**Mở menuconfig:**
 
 ```bash
 idf.py menuconfig
 ```
 
-**选择板子：**
+**Chọn board:**
 
 ```
 Xiaozhi Assistant -> Board Type -> AtomS3R + Echo Base
 ```
 
-**修改 flash 大小：**
+**Sửa đổi kích thước flash:**
 
 ```
 Serial flasher config -> Flash size -> 8 MB
 ```
 
-**修改分区表：**
+**Sửa đổi bảng phân vùng:**
 
 ```
 Partition Table -> Custom partition CSV file -> partitions/v2/8m.csv
 ```
 
-**修改 psram 配置：**
+**Sửa đổi cấu hình psram:**
 
 ```
 Component config -> ESP PSRAM -> SPI RAM config -> Mode (QUAD/OCT) -> Octal Mode PSRAM
 ```
 
-**编译：**
+**Biên dịch:**
 
 ```bash
 idf.py build
-```

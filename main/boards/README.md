@@ -1,44 +1,44 @@
-# 自定义开发板指南
+# Hướng dẫn Phát triển Bảng Mạch Tùy Chỉnh
 
-本指南介绍如何为小智AI语音聊天机器人项目定制一个新的开发板初始化程序。小智AI支持70多种ESP32系列开发板，每个开发板的初始化代码都放在对应的目录下。
+Hướng dẫn này giới thiệu cách tùy chỉnh chương trình khởi tạo cho một bảng mạch phát triển mới cho dự án robot trò chuyện AI Xiao Zhi. Xiao Zhi AI hỗ trợ hơn 70 bảng mạch phát triển ESP32 series, mã khởi tạo của mỗi bảng mạch được đặt trong thư mục tương ứng.
 
-## 重要提示
+## Lưu Ý Quan Trọng
 
-> **警告**: 对于自定义开发板，当IO配置与原有开发板不同时，切勿直接覆盖原有开发板的配置编译固件。必须创建新的开发板类型，或者通过config.json文件中的builds配置不同的name和sdkconfig宏定义来区分。使用 `python scripts/release.py [开发板目录名字]` 来编译打包固件。
+> **Cảnh báo**: Đối với bảng mạch tùy chỉnh, khi cấu hình IO khác với bảng mạch gốc, tuyệt đối không được ghi đè trực tiếp cấu hình bảng mạch gốc để biên dịch firmware. Phải tạo loại bảng mạch mới, hoặc qua cấu hình builds trong file config.json với name khác nhau và macro sdkconfig để phân biệt. Sử dụng `python scripts/release.py [tên thư mục bảng mạch]` để biên dịch và đóng gói firmware.
 >
-> 如果直接覆盖原有配置，将来OTA升级时，您的自定义固件可能会被原有开发板的标准固件覆盖，导致您的设备无法正常工作。每个开发板有唯一的标识和对应的固件升级通道，保持开发板标识的唯一性非常重要。
+> Nếu ghi đè trực tiếp cấu hình gốc, khi OTA nâng cấp trong tương lai, firmware tùy chỉnh của bạn có thể bị firmware chuẩn của bảng mạch gốc ghi đè, dẫn đến thiết bị không hoạt động bình thường. Mỗi bảng mạch có định danh duy nhất và kênh nâng cấp firmware tương ứng, việc giữ tính duy nhất của định danh bảng mạch rất quan trọng.
 
-## 目录结构
+## Cấu Trúc Thư Mục
 
-每个开发板的目录结构通常包含以下文件：
+Cấu trúc thư mục của mỗi bảng mạch thường bao gồm các file sau:
 
-- `xxx_board.cc` - 主要的板级初始化代码，实现了板子相关的初始化和功能
-- `config.h` - 板级配置文件，定义了硬件管脚映射和其他配置项
-- `config.json` - 编译配置，指定目标芯片和特殊的编译选项
-- `README.md` - 开发板相关的说明文档
+- `xxx_board.cc` - Mã khởi tạo cấp bảng mạch chính, triển khai khởi tạo và chức năng liên quan đến bảng mạch
+- `config.h` - File cấu hình cấp bảng mạch, định nghĩa ánh xạ chân phần cứng và các mục cấu hình khác
+- `config.json` - Cấu hình biên dịch, chỉ định chip mục tiêu và các tùy chọn biên dịch đặc biệt
+- `README.md` - Tài liệu giải thích liên quan đến bảng mạch
 
-## 定制开发板步骤
+## Các Bước Tùy Chỉnh Bảng Mạch
 
-### 1. 创建新的开发板目录
+### 1. Tạo Thư Mục Bảng Mạch Mới
 
-首先在`boards/`目录下创建一个新的目录，例如`my-custom-board/`：
+Trước tiên tạo một thư mục mới trong thư mục `boards/`, ví dụ `my-custom-board/`:
 
 ```bash
 mkdir main/boards/my-custom-board
 ```
 
-### 2. 创建配置文件
+### 2. Tạo File Cấu Hình
 
 #### config.h
 
-在`config.h`中定义所有的硬件配置，包括:
+Trong `config.h` định nghĩa tất cả cấu hình phần cứng, bao gồm:
 
-- 音频采样率和I2S引脚配置
-- 音频编解码芯片地址和I2C引脚配置
-- 按钮和LED引脚配置
-- 显示屏参数和引脚配置
+- Tỷ lệ lấy mẫu âm thanh và cấu hình chân I2S
+- Địa chỉ chip codec âm thanh và cấu hình chân I2C
+- Cấu hình chân nút bấm và LED
+- Tham số màn hình hiển thị và cấu hình chân
 
-参考示例（来自lichuang-c3-dev）：
+Tham khảo ví dụ (từ lichuang-c3-dev):
 
 ```c
 #ifndef _BOARD_CONFIG_H_
@@ -46,7 +46,7 @@ mkdir main/boards/my-custom-board
 
 #include <driver/gpio.h>
 
-// 音频配置
+// Cấu hình âm thanh
 #define AUDIO_INPUT_SAMPLE_RATE  24000
 #define AUDIO_OUTPUT_SAMPLE_RATE 24000
 
@@ -61,10 +61,10 @@ mkdir main/boards/my-custom-board
 #define AUDIO_CODEC_I2C_SCL_PIN  GPIO_NUM_1
 #define AUDIO_CODEC_ES8311_ADDR  ES8311_CODEC_DEFAULT_ADDR
 
-// 按钮配置
+// Cấu hình nút bấm
 #define BOOT_BUTTON_GPIO        GPIO_NUM_9
 
-// 显示屏配置
+// Cấu hình màn hình hiển thị
 #define DISPLAY_SPI_SCK_PIN     GPIO_NUM_3
 #define DISPLAY_SPI_MOSI_PIN    GPIO_NUM_5
 #define DISPLAY_DC_PIN          GPIO_NUM_6
@@ -87,16 +87,16 @@ mkdir main/boards/my-custom-board
 
 #### config.json
 
-在`config.json`中定义编译配置:
+Trong `config.json` định nghĩa cấu hình biên dịch:
 
 ```json
 {
-    "target": "esp32s3",  // 目标芯片型号: esp32, esp32s3, esp32c3等
+    "target": "esp32s3",  // Loại chip mục tiêu: esp32, esp32s3, esp32c3 v.v.
     "builds": [
         {
-            "name": "my-custom-board",  // 开发板名称
+            "name": "my-custom-board",  // Tên bảng mạch
             "sdkconfig_append": [
-                // 额外需要的编译配置
+                // Cấu hình biên dịch bổ sung cần thiết
                 "CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y",
                 "CONFIG_PARTITION_TABLE_CUSTOM_FILENAME=\"partitions/v2/8m.csv\""
             ]
@@ -105,16 +105,16 @@ mkdir main/boards/my-custom-board
 }
 ```
 
-### 3. 编写板级初始化代码
+### 3. Viết Mã Khởi Tạo Cấp Bảng Mạch
 
-创建一个`my_custom_board.cc`文件，实现开发板的所有初始化逻辑。
+Tạo file `my_custom_board.cc`, triển khai tất cả logic khởi tạo của bảng mạch.
 
-一个基本的开发板类定义包含以下几个部分：
+Định nghĩa lớp bảng mạch cơ bản bao gồm các phần sau:
 
-1. **类定义**：继承自`WifiBoard`或`Ml307Board`
-2. **初始化函数**：包括I2C、显示屏、按钮、IoT等组件的初始化
-3. **虚函数重写**：如`GetAudioCodec()`、`GetDisplay()`、`GetBacklight()`等
-4. **注册开发板**：使用`DECLARE_BOARD`宏注册开发板
+1. **Định nghĩa lớp**: Kế thừa từ `WifiBoard` hoặc `Ml307Board`
+2. **Hàm khởi tạo**: Bao gồm khởi tạo I2C, màn hình hiển thị, nút bấm, IoT v.v.
+3. **Ghi đè hàm ảo**: Như `GetAudioCodec()`, `GetDisplay()`, `GetBacklight()` v.v.
+4. **Đăng ký bảng mạch**: Sử dụng macro `DECLARE_BOARD` để đăng ký bảng mạch
 
 ```cpp
 #include "wifi_board.h"
@@ -137,7 +137,7 @@ private:
     Button boot_button_;
     LcdDisplay* display_;
 
-    // I2C初始化
+    // Khởi tạo I2C
     void InitializeI2c() {
         i2c_master_bus_config_t i2c_bus_cfg = {
             .i2c_port = I2C_NUM_0,
@@ -154,7 +154,7 @@ private:
         ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_bus_cfg, &codec_i2c_bus_));
     }
 
-    // SPI初始化（用于显示屏）
+    // Khởi tạo SPI (dùng cho màn hình hiển thị)
     void InitializeSpi() {
         spi_bus_config_t buscfg = {};
         buscfg.mosi_io_num = DISPLAY_SPI_MOSI_PIN;
@@ -166,7 +166,7 @@ private:
         ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_CH_AUTO));
     }
 
-    // 按钮初始化
+    // Khởi tạo nút bấm
     void InitializeButtons() {
         boot_button_.OnClick([this]() {
             auto& app = Application::GetInstance();
@@ -177,7 +177,7 @@ private:
         });
     }
 
-    // 显示屏初始化（以ST7789为例）
+    // Khởi tạo màn hình hiển thị (lấy ST7789 làm ví dụ)
     void InitializeDisplay() {
         esp_lcd_panel_io_handle_t panel_io = nullptr;
         esp_lcd_panel_handle_t panel = nullptr;
@@ -204,20 +204,20 @@ private:
         esp_lcd_panel_swap_xy(panel, DISPLAY_SWAP_XY);
         esp_lcd_panel_mirror(panel, DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y);
         
-        // 创建显示屏对象
+        // Tạo đối tượng màn hình hiển thị
         display_ = new SpiLcdDisplay(panel_io, panel,
                                     DISPLAY_WIDTH, DISPLAY_HEIGHT, 
                                     DISPLAY_OFFSET_X, DISPLAY_OFFSET_Y, 
                                     DISPLAY_MIRROR_X, DISPLAY_MIRROR_Y, DISPLAY_SWAP_XY);
     }
 
-    // MCP Tools 初始化
+    // Khởi tạo MCP Tools
     void InitializeTools() {
-        // 参考 MCP 文档
+        // Tham khảo tài liệu MCP
     }
 
 public:
-    // 构造函数
+    // Constructor
     MyCustomBoard() : boot_button_(BOOT_BUTTON_GPIO) {
         InitializeI2c();
         InitializeSpi();
@@ -227,7 +227,7 @@ public:
         GetBacklight()->SetBrightness(100);
     }
 
-    // 获取音频编解码器
+    // Lấy codec âm thanh
     virtual AudioCodec* GetAudioCodec() override {
         static Es8311AudioCodec audio_codec(
             codec_i2c_bus_, 
@@ -244,83 +244,82 @@ public:
         return &audio_codec;
     }
 
-    // 获取显示屏
+    // Lấy màn hình hiển thị
     virtual Display* GetDisplay() override {
         return display_;
     }
     
-    // 获取背光控制
+    // Lấy điều khiển backlight
     virtual Backlight* GetBacklight() override {
         static PwmBacklight backlight(DISPLAY_BACKLIGHT_PIN, DISPLAY_BACKLIGHT_OUTPUT_INVERT);
         return &backlight;
     }
 };
 
-// 注册开发板
+// Đăng ký bảng mạch
 DECLARE_BOARD(MyCustomBoard);
 ```
 
-### 4. 创建README.md
+### 4. Tạo README.md
 
-在README.md中说明开发板的特性、硬件要求、编译和烧录步骤：
+Trong README.md giải thích đặc tính bảng mạch, yêu cầu phần cứng, các bước biên dịch và flash:
 
+## Các Thành Phần Bảng Mạch Phổ Biến
 
-## 常见开发板组件
+### 1. Màn Hình Hiển Thị
 
-### 1. 显示屏
-
-项目支持多种显示屏驱动，包括:
+Dự án hỗ trợ nhiều driver màn hình hiển thị, bao gồm:
 - ST7789 (SPI)
 - ILI9341 (SPI)
 - SH8601 (QSPI)
-- 等...
+- v.v...
 
-### 2. 音频编解码器
+### 2. Codec Âm Thanh
 
-支持的编解码器包括:
-- ES8311 (常用)
-- ES7210 (麦克风阵列)
-- AW88298 (功放)
-- 等...
+Các codec được hỗ trợ bao gồm:
+- ES8311 (phổ biến)
+- ES7210 (mảng microphone)
+- AW88298 (công suất khuếch đại)
+- v.v...
 
-### 3. 电源管理
+### 3. Quản Lý Nguồn
 
-一些开发板使用电源管理芯片:
+Một số bảng mạch sử dụng chip quản lý nguồn:
 - AXP2101
-- 其他可用的PMIC
+- Các PMIC khác có sẵn
 
-### 4. MCP设备控制
+### 4. Điều Khiển Thiết Bị MCP
 
-可以添加各种MCP工具，让AI能够使用:
-- Speaker (扬声器控制)
-- Screen (屏幕亮度调节)
-- Battery (电池电量读取)
-- Light (灯光控制)
-- 等...
+Có thể thêm các công cụ MCP khác nhau để AI có thể sử dụng:
+- Speaker (điều khiển loa)
+- Screen (điều chỉnh độ sáng màn hình)
+- Battery (đọc mức pin)
+- Light (điều khiển đèn)
+- v.v...
 
-## 开发板类继承关系
+## Mối Quan Hệ Kế Thừa Lớp Bảng Mạch
 
-- `Board` - 基础板级类
-  - `WifiBoard` - Wi-Fi连接的开发板
-  - `Ml307Board` - 使用4G模块的开发板
-  - `DualNetworkBoard` - 支持Wi-Fi与4G网络切换的开发板
+- `Board` - Lớp cấp bảng mạch cơ bản
+  - `WifiBoard` - Bảng mạch kết nối Wi-Fi
+  - `Ml307Board` - Bảng mạch sử dụng module 4G
+  - `DualNetworkBoard` - Bảng mạch hỗ trợ chuyển đổi giữa Wi-Fi và 4G
 
-## 开发技巧
+## Mẹo Phát Triển
 
-1. **参考相似的开发板**：如果您的新开发板与现有开发板有相似之处，可以参考现有实现
-2. **分步调试**：先实现基础功能（如显示），再添加更复杂的功能（如音频）
-3. **管脚映射**：确保在config.h中正确配置所有管脚映射
-4. **检查硬件兼容性**：确认所有芯片和驱动程序的兼容性
+1. **Tham khảo bảng mạch tương tự**: Nếu bảng mạch mới của bạn tương tự với bảng mạch hiện có, có thể tham khảo triển khai hiện có
+2. **Debug từng bước**: Trước tiên triển khai chức năng cơ bản (như hiển thị), sau đó thêm chức năng phức tạp hơn (như âm thanh)
+3. **Ánh xạ chân**: Đảm bảo cấu hình đúng tất cả ánh xạ chân trong config.h
+4. **Kiểm tra tính tương thích phần cứng**: Xác nhận tính tương thích của tất cả chip và driver
 
-## 可能遇到的问题
+## Các Vấn Đề Có Thể Gặp Phải
 
-1. **显示屏不正常**：检查SPI配置、镜像设置和颜色反转设置
-2. **音频无输出**：检查I2S配置、PA使能引脚和编解码器地址
-3. **无法连接网络**：检查Wi-Fi凭据和网络配置
-4. **无法与服务器通信**：检查MQTT或WebSocket配置
+1. **Màn hình hiển thị bất thường**: Kiểm tra cấu hình SPI, thiết lập gương và thiết lập đảo màu
+2. **Không có đầu ra âm thanh**: Kiểm tra cấu hình I2S, chân kích hoạt PA và địa chỉ codec
+3. **Không thể kết nối mạng**: Kiểm tra thông tin xác thực Wi-Fi và cấu hình mạng
+4. **Không thể giao tiếp với máy chủ**: Kiểm tra cấu hình MQTT hoặc WebSocket
 
-## 参考资料
+## Tài Liệu Tham Khảo
 
-- ESP-IDF 文档: https://docs.espressif.com/projects/esp-idf/
-- LVGL 文档: https://docs.lvgl.io/
-- ESP-SR 文档: https://github.com/espressif/esp-sr 
+- Tài liệu ESP-IDF: https://docs.espressif.com/projects/esp-idf/
+- Tài liệu LVGL: https://docs.lvgl.io/
+- Tài liệu ESP-SR: https://github.com/espressif/esp-sr

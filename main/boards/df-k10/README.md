@@ -1,37 +1,36 @@
-# DFRobot 行空板 K10
+# Bảng DFRobot Hành Không K10
 
-## 按键配置
-* A：短按-打断/唤醒，长按1s-音量调大
-* B：短按-打断/唤醒，长按1s-音量调小
+## Cấu Hình Nút Bấm
+* A: Nhấn ngắn - Ngắt/Đánh thức, Nhấn dài 1s - Tăng âm lượng
+* B: Nhấn ngắn - Ngắt/Đánh thức, Nhấn dài 1s - Giảm âm lượng
 
-## 编译配置命令
+## Lệnh Cấu Hình Biên Dịch
 
-**配置编译目标为 ESP32S3：**
+**Cấu hình mục tiêu biên dịch là ESP32S3:**
 
 ```bash
 idf.py set-target esp32s3
 ```
 
-**打开 menuconfig：**
+**Mở menuconfig:**
 
 ```bash
 idf.py menuconfig
 ```
 
-**选择板子：**
+**Chọn board:**
 
 ```
-Xiaozhi Assistant -> Board Type -> DFRobot 行空板 K10
+Xiaozhi Assistant -> Board Type -> DFRobot Hành Không Bảng K10
 ```
 
-**修改 psram 配置：**
+**Sửa đổi cấu hình psram:**
 
 ```
 Component config -> ESP PSRAM -> SPI RAM config -> Mode (QUAD/OCT) -> Octal Mode PSRAM
 ```
 
-**编译：**
+**Biên dịch:**
 
 ```bash
 idf.py build
-```

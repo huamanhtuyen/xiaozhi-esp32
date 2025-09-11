@@ -1,95 +1,96 @@
-# P3音频格式转换与播放工具
+# Công Cụ Chuyển Đổi Và Phát Định Dạng Âm Thanh P3
 
-这个目录包含两个用于处理P3格式音频文件的Python脚本：
+Thư mục này chứa các script Python dùng để xử lý file âm thanh định dạng P3:
 
-## 1. 音频转换工具 (convert_audio_to_p3.py)
+## 1. Công Cụ Chuyển Đổi Âm Thanh (convert_audio_to_p3.py)
 
-将普通音频文件转换为P3格式（4字节header + Opus数据包的流式结构）并进行响度标准化。
+Chuyển đổi file âm thanh thông thường sang định dạng P3 (4 byte header + cấu trúc stream dữ liệu Opus) và chuẩn hóa âm lượng.
 
-### 使用方法
+### Cách Sử Dụng
 
 ```bash
-python convert_audio_to_p3.py <输入音频文件> <输出P3文件> [-l LUFS] [-d]
+python convert_audio_to_p3.py <file âm thanh đầu vào> <file P3 đầu ra> [-l LUFS] [-d]
 ```
 
-其中，可选选项 `-l` 用于指定响度标准化的目标响度，默认为 -16 LUFS；可选选项 `-d` 可以禁用响度标准化。
+Trong đó, tùy chọn `-l` dùng để chỉ định mức âm lượng chuẩn hóa mục tiêu, mặc định là -16 LUFS; tùy chọn `-d` có thể tắt chuẩn hóa âm lượng.
 
-如果输入的音频文件符合下面的任一条件，建议使用 `-d` 禁用响度标准化：
-- 音频过短
-- 音频已经调整过响度
-- 音频来自默认 TTS （小智当前使用的 TTS 的默认响度已是 -16 LUFS）
+Nếu file âm thanh đầu vào thỏa mãn một trong các điều kiện sau, khuyên dùng `-d` để tắt chuẩn hóa âm lượng:
+- Âm thanh quá ngắn
+- Âm thanh đã điều chỉnh âm lượng
+- Âm thanh từ TTS mặc định (âm lượng mặc định của TTS mà Xiao Zhi hiện dùng đã là -16 LUFS)
 
-例如：
+Ví dụ:
 ```bash
 python convert_audio_to_p3.py input.mp3 output.p3
 ```
 
-## 2. P3音频播放工具 (play_p3.py)
+## 2. Công Cụ Phát Âm Thanh P3 (play_p3.py)
 
-播放P3格式的音频文件。
+Phát file âm thanh định dạng P3.
 
-### 特性
+### Tính Năng
 
-- 解码并播放P3格式的音频文件
-- 在播放结束或用户中断时应用淡出效果，避免破音
-- 支持通过命令行参数指定要播放的文件
+- Giải mã và phát file âm thanh định dạng P3
+- Khi kết thúc phát hoặc người dùng ngắt, áp dụng hiệu ứng fade out để tránh tiếng vỡ
+- Hỗ trợ chỉ định file cần phát qua tham số dòng lệnh
 
-### 使用方法
+### Cách Sử Dụng
 
 ```bash
-python play_p3.py <P3文件路径>
+python play_p3.py <đường dẫn file P3>
 ```
 
-例如：
+Ví dụ:
 ```bash
 python play_p3.py output.p3
 ```
 
-## 3. 音频转回工具 (convert_p3_to_audio.py)
+## 3. Công Cụ Chuyển P3 Trở Lại Âm Thanh (convert_p3_to_audio.py)
 
-将P3格式转换回普通音频文件。
+Chuyển định dạng P3 trở lại file âm thanh thông thường.
 
-### 使用方法
+### Cách Sử Dụng
 
 ```bash
-python convert_p3_to_audio.py <输入P3文件> <输出音频文件>
+python convert_p3_to_audio.py <file P3 đầu vào> <file âm thanh đầu ra>
 ```
 
-输出音频文件需要有扩展名。
+File âm thanh đầu ra cần có phần mở rộng.
 
-例如：
+Ví dụ:
 ```bash
 python convert_p3_to_audio.py input.p3 output.wav
 ```
-## 4. 音频/P3批量转换工具
 
-一个图形化的工具，支持批量转换音频到P3，P3到音频
+## 4. Công Cụ Chuyển Đổi Hàng Loạt Âm Thanh/P3
+
+Một công cụ giao diện đồ họa, hỗ trợ chuyển đổi hàng loạt âm thanh sang P3, P3 sang âm thanh
 
 ![](./img/img.png)
 
-### 使用方法：
+### Cách Sử Dụng:
 ```bash
 python batch_convert_gui.py
 ```
 
-## 依赖安装
+## Cài Đặt Dependencies
 
-在使用这些脚本前，请确保安装了所需的Python库：
+Trước khi sử dụng các script này, vui lòng đảm bảo đã cài đặt các thư viện Python cần thiết:
 
 ```bash
 pip install librosa opuslib numpy tqdm sounddevice pyloudnorm soundfile
 ```
 
-或者使用提供的requirements.txt文件：
+Hoặc sử dụng file requirements.txt cung cấp:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## P3格式说明
+## Giải Thích Định Dạng P3
 
-P3格式是一种简单的流式音频格式，结构如下：
-- 每个音频帧由一个4字节的头部和一个Opus编码的数据包组成
-- 头部格式：[1字节类型, 1字节保留, 2字节长度]
-- 采样率固定为16000Hz，单声道
-- 每帧时长为60ms 
+Định dạng P3 là một định dạng âm thanh stream đơn giản, cấu trúc như sau:
+- Mỗi khung âm thanh gồm một header 4 byte và một gói dữ liệu mã hóa Opus
+- Định dạng header: [1 byte loại, 1 byte dự trữ, 2 byte độ dài]
+- Tỷ lệ lấy mẫu cố định 16000Hz, đơn kênh
+- Độ dài mỗi khung là 60ms

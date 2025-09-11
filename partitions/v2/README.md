@@ -1,47 +1,49 @@
-# Version 2 Partition Table
+# Bảng Phân Vùng Phiên Bản 2
 
-This version introduces significant improvements over v1 by adding an `assets` partition to support network-loadable content and optimizing partition layouts for different flash sizes.
+Phiên bản này giới thiệu những cải tiến đáng kể so với v1 bằng cách thêm phân vùng `assets` để hỗ trợ nội dung có thể tải qua mạng và tối ưu hóa bố cục phân vùng cho các kích thước flash khác nhau.
 
-## Key Changes from v1
+## Những Thay Đổi Chính So Với v1
 
-### Major Improvements
-1. **Added Assets Partition**: New `assets` partition for network-loadable content
-2. **Replaced Model Partition**: The old `model` partition (960KB) is replaced with a larger `assets` partition
-3. **Optimized App Partitions**: Reduced application partition sizes to accommodate assets
-4. **Enhanced Flexibility**: Support for dynamic content updates without reflashing
+### Những Cải Tiến Chính
 
-### Assets Partition Features
-The `assets` partition stores:
-- **Wake word models**: Customizable wake word models that can be loaded from the network
-- **Theme files**: Complete theming system including:
-  - Fonts (text and icon fonts)
-  - Audio effects and sound files
-  - Background images and UI elements
-  - Custom emoji packs
-  - Language configuration files
-- **Dynamic Content**: All content can be updated over-the-air via HTTP downloads
+1. **Thêm Phân Vùng Assets**: Phân vùng `assets` mới cho nội dung có thể tải qua mạng
+2. **Thay Thế Phân Vùng Model**: Phân vùng `model` cũ (960KB) được thay thế bằng phân vùng `assets` lớn hơn
+3. **Tối Ưu Hóa Phân Vùng Ứng Dụng**: Giảm kích thước phân vùng ứng dụng để chứa assets
+4. **Tăng Cường Tính Linh Hoạt**: Hỗ trợ cập nhật nội dung động mà không cần flash lại
 
-## Partition Layout Comparison
+### Tính Năng Phân Vùng Assets
 
-### v1 Layout (16MB)
-- `nvs`: 16KB (non-volatile storage)
-- `otadata`: 8KB (OTA data)
-- `phy_init`: 4KB (PHY initialization data)
-- `model`: 960KB (model storage - fixed content)
-- `ota_0`: 6MB (application partition 0)
-- `ota_1`: 6MB (application partition 1)
+Phân vùng `assets` lưu trữ:
+- **Mô hình từ đánh thức**: Các mô hình từ đánh thức có thể tùy chỉnh có thể tải từ mạng
+- **File theme**: Hệ thống theme hoàn chỉnh bao gồm:
+  - Font chữ (font văn bản và font icon)
+  - Hiệu ứng âm thanh và file âm thanh
+  - Hình nền và các thành phần UI
+  - Bộ emoji tùy chỉnh
+  - File cấu hình ngôn ngữ
+- **Nội Dung Động**: Tất cả nội dung có thể được cập nhật qua không khí qua tải xuống HTTP
 
-### v2 Layout (16MB)
-- `nvs`: 16KB (non-volatile storage)
-- `otadata`: 8KB (OTA data)
-- `phy_init`: 4KB (PHY initialization data)
-- `ota_0`: 4MB (application partition 0)
-- `ota_1`: 4MB (application partition 1)
-- `assets`: 8MB (network-loadable assets)
+## So Sánh Bố Cục Phân Vùng
 
-## Available Configurations
+### Bố Cục v1 (16MB)
+- `nvs`: 16KB (lưu trữ không thay đổi)
+- `otadata`: 8KB (dữ liệu OTA)
+- `phy_init`: 4KB (dữ liệu khởi tạo PHY)
+- `model`: 960KB (lưu trữ mô hình - nội dung cố định)
+- `ota_0`: 6MB (phân vùng ứng dụng 0)
+- `ota_1`: 6MB (phân vùng ứng dụng 1)
 
-### 8MB Flash Devices (`8m.csv`)
+### Bố Cục v2 (16MB)
+- `nvs`: 16KB (lưu trữ không thay đổi)
+- `otadata`: 8KB (dữ liệu OTA)
+- `phy_init`: 4KB (dữ liệu khởi tạo PHY)
+- `ota_0`: 4MB (phân vùng ứng dụng 0)
+- `ota_1`: 4MB (phân vùng ứng dụng 1)
+- `assets`: 8MB (assets có thể tải qua mạng)
+
+## Các Cấu Hình Có Sẵn
+
+### Thiết Bị Flash 8MB (`8m.csv`)
 - `nvs`: 16KB
 - `otadata`: 8KB
 - `phy_init`: 4KB
@@ -49,7 +51,7 @@ The `assets` partition stores:
 - `ota_1`: 3MB
 - `assets`: 2MB
 
-### 16MB Flash Devices (`16m.csv`) - Standard
+### Thiết Bị Flash 16MB (`16m.csv`) - Chuẩn
 - `nvs`: 16KB
 - `otadata`: 8KB
 - `phy_init`: 4KB
@@ -57,15 +59,15 @@ The `assets` partition stores:
 - `ota_1`: 4MB
 - `assets`: 8MB
 
-### 16MB Flash Devices (`16m_c3.csv`) - ESP32-C3 Optimized
+### Thiết Bị Flash 16MB (`16m_c3.csv`) - Tối Ưu Cho ESP32-C3
 - `nvs`: 16KB
 - `otadata`: 8KB
 - `phy_init`: 4KB
 - `ota_0`: 4MB
 - `ota_1`: 4MB
-- `assets`: 4MB (4000K - limited by available mmap pages)
+- `assets`: 4MB (4000K - bị giới hạn bởi số trang mmap có sẵn)
 
-### 32MB Flash Devices (`32m.csv`)
+### Thiết Bị Flash 32MB (`32m.csv`)
 - `nvsfactory`: 200KB
 - `nvs`: 840KB
 - `otadata`: 8KB
@@ -74,34 +76,34 @@ The `assets` partition stores:
 - `ota_1`: 4MB
 - `assets`: 16MB
 
-## Benefits
+## Lợi Ích
 
-1. **Dynamic Content Management**: Users can download and update wake word models, themes, and other assets without reflashing the device
-2. **Reduced App Size**: Application partitions are optimized, allowing more space for dynamic content
-3. **Enhanced Customization**: Support for custom themes, wake words, and language packs enhances user experience
-4. **Network Flexibility**: Assets can be updated independently of the main application firmware
-5. **Better Resource Utilization**: Efficient use of flash memory with configurable asset storage
-6. **OTA Asset Updates**: Assets can be updated over-the-air via HTTP downloads
+1. **Quản Lý Nội Dung Động**: Người dùng có thể tải xuống và cập nhật mô hình từ đánh thức, theme và các assets khác mà không cần flash lại thiết bị
+2. **Giảm Kích Thước Ứng Dụng**: Phân vùng ứng dụng được tối ưu hóa, cho phép không gian lớn hơn cho nội dung động
+3. **Tăng Cường Tùy Chỉnh**: Hỗ trợ theme tùy chỉnh, từ đánh thức và gói ngôn ngữ nâng cao trải nghiệm người dùng
+4. **Tính Linh Hoạt Mạng**: Assets có thể được cập nhật độc lập với firmware ứng dụng chính
+5. **Sử Dụng Tài Nguyên Tốt Hơn**: Sử dụng bộ nhớ flash hiệu quả với lưu trữ assets có thể cấu hình
+6. **Cập Nhật Assets OTA**: Assets có thể được cập nhật qua không khí qua tải xuống HTTP
 
-## Technical Details
+## Chi Tiết Kỹ Thuật
 
-- **Partition Type**: Assets partition uses `spiffs` subtype for SPIFFS filesystem compatibility
-- **Memory Mapping**: Assets are memory-mapped for efficient access during runtime
-- **Checksum Validation**: Built-in integrity checking ensures asset data validity
-- **Progressive Download**: Assets can be downloaded progressively with progress tracking
-- **Fallback Support**: Graceful fallback to default assets if network updates fail
+- **Loại Phân Vùng**: Phân vùng Assets sử dụng subtype `spiffs` để tương thích với hệ thống file SPIFFS
+- **Ánh Xạ Bộ Nhớ**: Assets được ánh xạ bộ nhớ để truy cập hiệu quả trong thời gian chạy
+- **Xác Thực Checksum**: Kiểm tra tính toàn vẹn tích hợp đảm bảo tính hợp lệ dữ liệu assets
+- **Tải Xuống Tiến Triển**: Assets có thể được tải xuống tiến triển với theo dõi tiến độ
+- **Hỗ Trợ Fallback**: Fallback êm ái đến assets mặc định nếu cập nhật mạng thất bại
 
-## Migration from v1
+## Di Chuyển Từ v1
 
-When upgrading from v1 to v2:
-1. **Backup Important Data**: Ensure any important data in the old `model` partition is backed up
-2. **Flash New Partition Table**: Use the appropriate v2 partition table for your flash size
-3. **Download Assets**: The device will automatically download required assets on first boot
-4. **Verify Functionality**: Ensure all features work correctly with the new partition layout
+Khi nâng cấp từ v1 lên v2:
+1. **Sao Lưu Dữ Liệu Quan Trọng**: Đảm bảo bất kỳ dữ liệu quan trọng nào trong phân vùng `model` cũ được sao lưu
+2. **Flash Bảng Phân Vùng Mới**: Sử dụng bảng phân vùng v2 phù hợp với kích thước flash của bạn
+3. **Tải Xuống Assets**: Thiết bị sẽ tự động tải xuống các assets cần thiết khi khởi động lần đầu
+4. **Xác Minh Chức Năng**: Đảm bảo tất cả tính năng hoạt động đúng với bố cục phân vùng mới
 
-## Usage Notes
+## Ghi Chú Sử Dụng
 
-- The `assets` partition size varies by configuration to optimize for different flash sizes
-- ESP32-C3 devices use a smaller assets partition (4MB) due to limited available mmap pages in the system
-- 32MB devices get the largest assets partition (16MB) for maximum content storage
-- All partition tables maintain proper alignment for optimal flash performance 
+- Kích thước phân vùng `assets` thay đổi theo cấu hình để tối ưu cho các kích thước flash khác nhau
+- Thiết bị ESP32-C3 sử dụng phân vùng assets nhỏ hơn (4MB) do giới hạn số trang mmap có sẵn trong hệ thống
+- Thiết bị 32MB có phân vùng assets lớn nhất (16MB) để lưu trữ nội dung tối đa
+- Tất cả bảng phân vùng duy trì căn chỉnh đúng để hiệu suất flash tối ưu
